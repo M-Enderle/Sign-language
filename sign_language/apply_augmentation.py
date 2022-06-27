@@ -18,7 +18,7 @@ def augmentation(path=DATA_PATH, amount: int = 10):
         _x_max = _x_max if _x_max <= 1 else 1.0
         _y_max = _y_max if _y_max <= 1 else 1.0
         return _x_min, _y_min, _x_max, _y_max
-
+    l_map = label_map()
     sequences, labels = [], []
     actions = get_actions()
     for action in actions:
@@ -43,5 +43,5 @@ def augmentation(path=DATA_PATH, amount: int = 10):
                 if not os.path.exists(os.path.join(DATA_PATH, action)):
                     os.makedirs(os.path.join(DATA_PATH, action))
                 sequences.append(s)
-                labels.append(action)
+                labels.append(l_map[action])
     return sequences, labels
