@@ -23,7 +23,7 @@ def augmentation(path=DATA_PATH, amount: int = 10):
     actions = get_actions()
     for action in actions:
         n_seq = len(os.listdir(os.path.join(path, action)))
-        print(action)
+        print("applying augmentation on folder", action)
         for seq in range(n_seq):
             move_dirs = random.choices(["left", "right", "up", "down"], k=amount)
             data = np.load(os.path.join(path, action, f"{seq}.npy"))
