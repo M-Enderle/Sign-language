@@ -1,6 +1,5 @@
 from utils import *
 
-DATA_PATH = os.path.join('../data/')
 actions = np.array(['hello', 'world', 'from', 'germany', 'none'])
 no_sequences = 300
 
@@ -21,6 +20,12 @@ with mp_holistic.Holistic(min_detection_confidence=0.8, min_tracking_confidence=
         for sequence in range(no_sequences):
 
             numpy_seq = []
+            if sequence != 0 and sequence % 40 == 0:
+                while not cv2.waitKey(10) & 0xFF == ord('c'):
+                    ret, frame = cap.read()
+                    cv2.putText(image, 'Take a break. press c to continue', (120, 200),
+                                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 4, cv2.LINE_AA)
+                    cv2.imshow('OpenCV Feed', frame)
 
             while True:
 
@@ -43,8 +48,9 @@ with mp_holistic.Holistic(min_detection_confidence=0.8, min_tracking_confidence=
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
                     cv2.imshow(action, image)
 
-                key_points = create_numpy(results)
-                numpy_seq.append(key_points)
+                if results.right_hand_landmarks or results.left_hand_landmarks:
+                    key_points = create_numpy(results)
+                    numpy_seq.append(key_points)
 
             npy_path = os.path.join(DATA_PATH, action, str(sequence))
             np.save(npy_path, np.array(numpy_seq))

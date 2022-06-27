@@ -1,4 +1,6 @@
 import os
+import random
+
 import cv2
 import numpy as np
 import mediapipe as mp
@@ -7,6 +9,7 @@ mp_holistic = mp.solutions.holistic
 mp_drawing = mp.solutions.drawing_utils
 sequence_length = 20
 blink_counter = 0
+DATA_PATH = os.path.join('../data/')
 
 
 def detect_landmarks(image, model):
@@ -47,7 +50,7 @@ def _generate_face(results):
     face = np.array([[res.x, res.y] for res in results.face_landmarks.landmark]) \
         if results.face_landmarks else np.zeros(468 * 3)
     x_min, x_max, y_min, y_max = np.min(face[:, 0]), np.max(face[:, 0]), \
-                                    np.min(face[:, 1]), np.max(face[:, 1])
+                                 np.min(face[:, 1]), np.max(face[:, 1])
     closest_points = []
 
     for y in np.linspace(y_min, y_max, 20):
@@ -82,11 +85,11 @@ def visualize_probabilities(res, image, actions):
                         cv2.LINE_AA)
 
 
-def label_map(path="../data/"):
+def label_map(path=DATA_PATH):
     return {label: num for num, label in enumerate(get_actions(path))}
 
 
-def get_actions(path="../data/"):
+def get_actions(path=DATA_PATH):
     actions = []
     for file in os.listdir(path):
         if os.path.isdir(os.path.join(path, file)):
@@ -95,7 +98,7 @@ def get_actions(path="../data/"):
     return np.array(actions)
 
 
-def create_folders(actions, path="../data/"):
+def create_folders(actions, path=DATA_PATH):
     if not os.path.exists(path):
         os.makedirs(path)
 
@@ -104,7 +107,7 @@ def create_folders(actions, path="../data/"):
             os.makedirs(os.path.join(path, action))
 
 
-def load_numpy(path="../data/"):
+def load_numpy(path=DATA_PATH):
     sequences, labels = [], []
     for action in get_actions(path):
         for file in os.listdir(os.path.join(path, action)):
@@ -138,4 +141,25 @@ def show_sentence(image, sentence):
     cv2.putText(image, text, (15, 46), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (255, 255, 255), 1, cv2.LINE_AA)
 
 
-
+def remove_unnec(to_rem: list):
+    data_from_to = {
+        "face": (0, 160),
+        "lh": (160, 202),
+        "rh": (202, 244)
+    }
+    to_rem.sort()
+    actions = get_actions()
+    for action in actions:
+        n_seq = len(os.listdir(os.path.join(DATA_PATH, action)))
+        for seq in range(n_seq):
+            s = []
+            data = np.load(os.path.join(DATA_PATH, action, f"{seq}.npy"))
+            for frame in data:
+                am_rem = 0
+                for r in to_rem:
+                    if r in data_from_to:
+                        frame = np.delete(frame, [range(data_from_to[r][0] - am_rem, data_from_to[r][1] - am_rem)])
+                        am_rem += data_from_to[r][1] - data_from_to[r][0] + 1
+                s.append(frame)
+            npy_path = os.path.join(DATA_PATH, action, str(seq))
+            np.save(npy_path, np.array(s))
