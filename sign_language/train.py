@@ -6,12 +6,11 @@ from sklearn.metrics import confusion_matrix
 import tensorflow as tf
 from tensorflow.keras.optimizers import SGD
 from utils import *
+from datetime import datetime
 
 TRAIN_SPLIT = 0.70
 TEST_SPLIT = 1 - TRAIN_SPLIT
 VAL_SPLIT = 0.25
-
-DATA_PATH = "../data/"
 
 actions = get_actions()
 
@@ -20,7 +19,7 @@ early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=5
 tensorboard = tf.keras.callbacks.TensorBoard(log_dir='../data/', histogram_freq=0, write_graph=True, write_images=True)
 
 model = Sequential()
-model.add(LSTM(256, return_sequences=True, activation='selu', kernel_initializer='lecun_normal', input_shape=(20,244)))
+model.add(LSTM(256, return_sequences=True, activation='selu', kernel_initializer='lecun_normal', input_shape=(20, 244)))
 model.add(Dropout(0.4))
 model.add(LSTM(128, return_sequences=False, activation='selu', kernel_initializer='lecun_normal'))
 model.add(Dropout(0.2))
@@ -52,7 +51,7 @@ print(f"Precision: {precision}")
 print(f"Recall:    {recall}")
 print(f"F1 score:  {f1_score}")
 
+date = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
 model.save('../data/model.h5')
-
-
+model.save(f'../data/{date}.h5') # backup model
 
