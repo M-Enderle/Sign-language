@@ -26,6 +26,8 @@ for folder in os.listdir(os.path.join(DATA_PATH)):
         os.makedirs(f"../pictures/{folder}")
 
     for seq in os.listdir(os.path.join(DATA_PATH, folder)):
+        if os.path.exists(os.path.join(f"../pictures/{folder}/{seq[:-4]}.png")):
+            continue
         print(folder, seq, sep="/")
         fig, ax = plt.subplots(ncols=1, figsize=(10, 8), dpi=300)
         data = np.load(os.path.join("../data/", str(folder), str(seq)))
