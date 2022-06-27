@@ -1,4 +1,5 @@
 import os.path
+import random
 
 from utils import *
 
@@ -25,20 +26,33 @@ def augmentation(path=DATA_PATH, amount: int = 10):
         n_seq = len(os.listdir(os.path.join(path, action)))
         print("applying augmentation on folder", action)
         for seq in range(n_seq):
-            move_dirs = random.choices(["left", "right", "up", "down"], k=amount)
+            move_dirs = random.choices(["left", "right", "up", "down", "left-up", "right-up", "left-down", "right-down"], k=amount)
             data = np.load(os.path.join(path, action, f"{seq}.npy"))
             x_min, y_min, x_max, y_max = get_mins_and_maxs(data)
             for index, d in enumerate(move_dirs):
+                to_move = random.random()
                 s = []
                 for frame in data:
                     if d == "left":
-                        frame[0::2] -= random.random() * x_min
+                        frame[0::2] -= to_move * x_min
                     elif d == "right":
-                        frame[0::2] += random.random() * (1 - x_max)
+                        frame[0::2] += to_move * (1 - x_max)
                     elif d == "up":
-                        frame[1::2] += random.random() * (1 - y_max)
+                        frame[1::2] += to_move * (1 - y_max)
                     elif d == "down":
-                        frame[1::2] -= random.random() * y_min
+                        frame[1::2] -= to_move * y_min
+                    elif d == "left-up":
+                        frame[0::2] -= to_move * x_min
+                        frame[1::2] += to_move * (1 - y_max)
+                    elif d == "right-up":
+                        frame[0::2] += to_move * (1 - x_max)
+                        frame[1::2] += to_move * (1 - y_max)
+                    elif d == "left-down":
+                        frame[0::2] -= to_move * x_min
+                        frame[1::2] -= to_move * y_min
+                    elif d == "right-down":
+                        frame[0::2] += to_move * (1 - x_max)
+                        frame[1::2] -= to_move * y_min
                     s.append(frame)
                 if not os.path.exists(os.path.join(DATA_PATH, action)):
                     os.makedirs(os.path.join(DATA_PATH, action))
