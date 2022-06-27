@@ -3,7 +3,7 @@ import os.path
 from utils import *
 
 
-def augmentation(path=BACKUP_PATH, amount: int = 10):
+def augmentation(path=DATA_PATH, amount: int = 10):
     def get_mins_and_maxs(data):
         _x_min, _y_min, _x_max, _y_max = 1, 1, 0, 0
         for frame in data:
@@ -19,6 +19,7 @@ def augmentation(path=BACKUP_PATH, amount: int = 10):
         _y_max = _y_max if _y_max <= 1 else 1.0
         return _x_min, _y_min, _x_max, _y_max
 
+    sequences, labels = [], []
     actions = get_actions()
     for action in actions:
         n_seq = len(os.listdir(os.path.join(path, action)))
@@ -41,8 +42,6 @@ def augmentation(path=BACKUP_PATH, amount: int = 10):
                     s.append(frame)
                 if not os.path.exists(os.path.join(DATA_PATH, action)):
                     os.makedirs(os.path.join(DATA_PATH, action))
-                npy_path = os.path.join(DATA_PATH, action, f'{seq}_{index}.npy')
-                np.save(npy_path, np.array(s))
-
-
-augmentation()
+                sequences.append(s)
+                labels.append(action)
+    return sequences, labels

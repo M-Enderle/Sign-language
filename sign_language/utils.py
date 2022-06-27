@@ -9,8 +9,7 @@ mp_holistic = mp.solutions.holistic
 mp_drawing = mp.solutions.drawing_utils
 sequence_length = 20
 blink_counter = 0
-DATA_PATH = os.path.join('../data/new')
-BACKUP_PATH = os.path.join('../data/backup/')
+DATA_PATH = os.path.join('../data/')
 
 
 def detect_landmarks(image, model):
@@ -86,11 +85,11 @@ def visualize_probabilities(res, image, actions):
                         cv2.LINE_AA)
 
 
-def label_map(path=BACKUP_PATH):
+def label_map(path=DATA_PATH):
     return {label: num for num, label in enumerate(get_actions(path))}
 
 
-def get_actions(path=BACKUP_PATH):
+def get_actions(path=DATA_PATH):
     actions = []
     for file in os.listdir(path):
         if os.path.isdir(os.path.join(path, file)):
@@ -108,7 +107,7 @@ def create_folders(actions, path=DATA_PATH):
             os.makedirs(os.path.join(path, action))
 
 
-def load_numpy(path=BACKUP_PATH):
+def load_numpy(path=DATA_PATH):
     sequences, labels = [], []
     for action in get_actions(path):
         for file in os.listdir(os.path.join(path, action)):
@@ -151,10 +150,10 @@ def remove_unnec(to_rem: list):
     to_rem.sort()
     actions = get_actions()
     for action in actions:
-        n_seq = len(os.listdir(os.path.join(BACKUP_PATH, action)))
+        n_seq = len(os.listdir(os.path.join(DATA_PATH, action)))
         for seq in range(n_seq):
             s = []
-            data = np.load(os.path.join(BACKUP_PATH, action, f"{seq}.npy"))
+            data = np.load(os.path.join(DATA_PATH, action, f"{seq}.npy"))
             for frame in data:
                 am_rem = 0
                 for r in to_rem:

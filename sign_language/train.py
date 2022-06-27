@@ -7,14 +7,25 @@ import tensorflow as tf
 from tensorflow.keras.optimizers import SGD
 from utils import *
 from datetime import datetime
+from apply_augmentation import augmentation
 
 TRAIN_SPLIT = 0.70
 TEST_SPLIT = 1 - TRAIN_SPLIT
 VAL_SPLIT = 0.25
 
 actions = get_actions()
+sequences, labels = augmentation()
 
-sequences, labels = load_numpy(DATA_PATH)
+print(f"{len(sequences)} sequences")
+print(f"{len(labels)} labels")
+
+added_sequences, added_labels = load_numpy(DATA_PATH)
+sequences += added_sequences
+labels += added_labels
+
+print(f"{len(sequences)} sequences")
+print(f"{len(labels)} labels")
+
 early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=50, mode="min", min_delta=0.001)
 tensorboard = tf.keras.callbacks.TensorBoard(log_dir='../data/', histogram_freq=0, write_graph=True, write_images=True)
 
