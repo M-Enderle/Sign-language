@@ -55,4 +55,3 @@ for folder in os.listdir(os.path.join(DATA_PATH)):
 
         # save the plot
         plt.savefig(f"../pictures/{folder}/{seq[:-4]}.png", bbox_inches='tight', pad_inches=0)
-        plt.show()
