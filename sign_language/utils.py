@@ -76,12 +76,14 @@ def create_numpy(results):
 
 
 def visualize_probabilities(res, image, actions):
+    i = 0
     for num, prob in enumerate(res):
         if not actions[num] == 'none':
-            cv2.rectangle(image, (0, 60 + num * 20), (int(prob * 100), 80 + num * 20),
+            cv2.rectangle(image, (0, 60 + i * 20), (int(prob * 100), 80 + i * 20),
                           (0, prob * 150, (1 - prob) * 150), -1)
-            cv2.putText(image, actions[num], (5, 75 + num * 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1,
+            cv2.putText(image, actions[num], (5, 75 + i * 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1,
                         cv2.LINE_AA)
+            i += 1
 
 
 def label_map(path=DATA_PATH):
