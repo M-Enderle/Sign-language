@@ -14,7 +14,7 @@ TEST_SPLIT = 1 - TRAIN_SPLIT
 VAL_SPLIT = 0.25
 
 actions = get_actions()
-sequences, labels = augmentation(amount=0)
+sequences, labels = augmentation(amount=10)
 
 added_sequences, added_labels = load_numpy(DATA_PATH)
 sequences += added_sequences
