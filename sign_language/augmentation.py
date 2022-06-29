@@ -93,7 +93,7 @@ def plot(data, sub_folder):
     set_color(fig, ax)
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
-    # plt.axis('off')
+    plt.axis('off')
 
     if not os.path.exists(f"../images/{sub_folder}"):
         os.makedirs(f"../images/{sub_folder}")
