@@ -2,7 +2,7 @@ import cv2
 
 from utils import *
 
-actions = np.array(['computer science', 'live demo', 'questions', 'further development'])
+actions = np.array(['project goals'])
 no_sequences = 10
 sequence_length = 20
 
@@ -39,7 +39,6 @@ with mp_holistic.Holistic(min_detection_confidence=0.8, min_tracking_confidence=
                 ret, frame = cap.read()
                 image, results = detect_landmarks(frame, holistic)
                 draw_landmarks(image, results)
-
                 if len(numpy_seq) == 0:
                     cv2.putText(image, 'STARTING COLLECTION', (120, 200),
                                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 4, cv2.LINE_AA)
@@ -51,6 +50,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.8, min_tracking_confidence=
                     cv2.putText(image, 'Collecting frames for {} Video Number {}'.format(action, sequence), (15, 12),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
                     cv2.imshow('OpenCV Feed', image)
+                    cv2.waitKey(10)
 
                 if results.right_hand_landmarks or results.left_hand_landmarks:
                     key_points = create_numpy(results)

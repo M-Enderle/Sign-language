@@ -61,15 +61,12 @@ for folder in os.listdir(os.path.join(DATA_PATH)):
         plt.close(fig)
 """
 
-files = [8, 40, 51, 200, 216, 248, 277, 281]
-folder = "hello"
+files = [x for x in range(10)]
+
 for file in files:
-    file = f"{file}.npy"
-    picture = os.path.join(DATA_PATH, folder, file)
+    picture = os.path.join("../size_aug", f"2_size_{file}_aug.npy")
     data = np.load(picture)
-
-
-    col_pal = sns.color_palette("Spectral", n_colors=20)
+    col_pal = sns.color_palette("Spectral", n_colors=len(data))
     for frame in range(1, len(data)):
         fig, ax = plt.subplots(ncols=1, figsize=(10, 8), dpi=75)
         xs = []
@@ -78,7 +75,6 @@ for file in files:
             xs.append(x)
         for y in data[frame][1::2]:
             ys.append(1 - y)
-
         color = col_pal[frame]
         sns.scatterplot(x="x", y="y", color=color, data=pd.DataFrame({"x": xs, "y": ys}), ax=ax, legend=False)
 
@@ -87,10 +83,10 @@ for file in files:
         ax.set_xlim(0, 1)
         ax.set_ylim(0, 1)
         plt.axis('off')
-        plt.savefig(f"../gif/{folder}_{file[:-4]}_{frame-1}.png", bbox_inches='tight', pad_inches=0)
+        plt.savefig(f"../gif/{file}_{frame-1}.png", bbox_inches='tight', pad_inches=0)
         plt.close(fig)
 
-    col_pal = sns.color_palette("Spectral", n_colors=20)
+    col_pal = sns.color_palette("Spectral", n_colors=len(data))
     fig, ax = plt.subplots(ncols=1, figsize=(10, 8), dpi=75)
     xs = []
     ys = []
@@ -104,19 +100,19 @@ for file in files:
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     plt.axis('off')
-    plt.savefig(f"../gif/{folder}_{file[:-4]}_19.png", bbox_inches='tight', pad_inches=0)
+    plt.savefig(f"../gif/{file}_{len(data)-1}.png", bbox_inches='tight', pad_inches=0)
 
 
     # create gif from folder gif with images
     images = []
-    for frame in range(20):
-        images.append(imageio.v2.imread(f"../gif/{folder}_{file[:-4]}_{frame}.png"))
-    imageio.mimsave(f"../gif/{folder}_{file[:-4]}.gif", images, duration=0.1)
+    for frame in range(len(data)):
+        images.append(imageio.v2.imread(f"../gif/{file}_{frame}.png"))
+    imageio.mimsave(f"../gif_2/{file}.gif", images, duration=0.1)
     plt.close(fig)
 
-    for file in os.listdir(os.path.join("../gif/")):
-        if file.endswith(".png"):
-            os.remove(os.path.join("../gif/", file))
+    for _file in os.listdir(os.path.join("../gif/")):
+        if _file.endswith(".png"):
+            os.remove(os.path.join("../gif/", _file))
 
 """
 from apply_augmentation import augmentation
