@@ -4,11 +4,11 @@ from utils import *
 
 
 def augmentation(path=DATA_PATH, amount: int = 10):
-    def get_mins_and_maxs(data):
+    def boundaries(data):
         _x_min, _y_min, _x_max, _y_max = 1, 1, 0, 0
-        for frame in data:
-            xs = frame[0::2]
-            ys = frame[1::2]
+        for _frame in data:
+            xs = _frame[0::2]
+            ys = _frame[1::2]
             _x_min = min(_x_min, np.min(xs)) if np.min(xs) != 0.0 else _x_min
             _y_min = min(_y_min, np.min(ys)) if np.min(ys) != 0.0 else _y_min
             _x_max = max(_x_max, np.max(xs))
@@ -30,7 +30,7 @@ def augmentation(path=DATA_PATH, amount: int = 10):
                 ["left", "right", "up", "down", "left-up", "right-up", "left-down", "right-down"], k=amount)
             for index, d in enumerate(move_dirs):
                 data = np.load(os.path.join(path, action, f"{seq}.npy"))
-                x_min, y_min, x_max, y_max = get_mins_and_maxs(data)
+                x_min, y_min, x_max, y_max = boundaries(data)
                 to_move = random.random()
                 s = []
                 for frame in data:
@@ -63,11 +63,11 @@ def augmentation(path=DATA_PATH, amount: int = 10):
 
 
 def augmentation_extreme_on_image(image=os.path.join(DATA_PATH, "world", "2.npy")):
-    def get_mins_and_maxs(data):
+    def boundaries(data):
         _x_min, _y_min, _x_max, _y_max = 1, 1, 0, 0
-        for frame in data:
-            xs = frame[0::2]
-            ys = frame[1::2]
+        for _frame in data:
+            xs = _frame[0::2]
+            ys = _frame[1::2]
             _x_min = min(_x_min, np.min(xs)) if np.min(xs) != 0.0 else _x_min
             _y_min = min(_y_min, np.min(ys)) if np.min(ys) != 0.0 else _y_min
             _x_max = max(_x_max, np.max(xs))
@@ -78,13 +78,10 @@ def augmentation_extreme_on_image(image=os.path.join(DATA_PATH, "world", "2.npy"
         _y_max = _y_max if _y_max <= 1 else 1.0
         return _x_min, _y_min, _x_max, _y_max
 
-    l_map = label_map()
-    sequences, labels = [], []
     move_dirs = ["left", "right", "up", "down", "left-up", "right-up", "left-down", "right-down"]
     for index, d in enumerate(move_dirs):
         data = np.load(image)
-        x_min, y_min, x_max, y_max = get_mins_and_maxs(data)
-        # to_move = random.random()
+        x_min, y_min, x_max, y_max = boundaries(data)
         s = []
         for frame in data:
             if d == "left":

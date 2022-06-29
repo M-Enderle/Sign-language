@@ -58,5 +58,5 @@ print(f"F1 score:  {f1_score}")
 
 date = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
 model.save('../data/model.h5')
-model.save(f'../data/{date}.h5') # backup model
+model.save(f'../data/{date}.h5')  # backup model
 

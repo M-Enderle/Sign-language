@@ -1,7 +1,10 @@
+import cv2
+
 from utils import *
 
-actions = np.array(['hello', 'world', 'from', 'germany', 'none'])
-no_sequences = 300
+actions = np.array(['computer science', 'live demo', 'questions', 'further development'])
+no_sequences = 10
+sequence_length = 20
 
 create_folders(actions, DATA_PATH)
 
@@ -16,17 +19,18 @@ with mp_holistic.Holistic(min_detection_confidence=0.8, min_tracking_confidence=
             cv2.putText(frame, '{}, press c to start'.format(action), (120, 200),
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 4, cv2.LINE_AA)
             cv2.imshow('OpenCV Feed', frame)
-
+        cv2.waitKey(1000)
         for sequence in range(no_sequences):
 
             numpy_seq = []
+            """
             if sequence != 0 and sequence % 40 == 0:
                 while not cv2.waitKey(10) & 0xFF == ord('c'):
                     ret, frame = cap.read()
                     cv2.putText(image, 'Take a break. press c to continue', (120, 200),
                                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 4, cv2.LINE_AA)
                     cv2.imshow('OpenCV Feed', frame)
-
+            """
             while True:
 
                 if len(numpy_seq) >= sequence_length:
@@ -41,12 +45,12 @@ with mp_holistic.Holistic(min_detection_confidence=0.8, min_tracking_confidence=
                                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 4, cv2.LINE_AA)
                     cv2.putText(image, 'Collecting frames for {} Video Number {}'.format(action, sequence), (15, 12),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
-                    cv2.imshow('Capturing ' + action, image)
+                    cv2.imshow('OpenCV Feed', image)
                     cv2.waitKey(1000)
                 else:
                     cv2.putText(image, 'Collecting frames for {} Video Number {}'.format(action, sequence), (15, 12),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
-                    cv2.imshow(action, image)
+                    cv2.imshow('OpenCV Feed', image)
 
                 if results.right_hand_landmarks or results.left_hand_landmarks:
                     key_points = create_numpy(results)
