@@ -109,11 +109,11 @@ def apply(path=DATA_PATH, amount: int = 10, test=None):
     actions = get_actions()
     l_map = label_map(path)
     for action in actions:
-        n_seq = len(os.listdir(os.path.join(path, action)))
+        files = os.listdir(os.path.join(path, action))
         print("applying augmentation on folder", action)
-        for seq in range(n_seq):
+        for seq, filename in enumerate(files):
             for i in range(amount):
-                data = np.load(os.path.join(path, action, f"{seq}.npy"))
+                data = np.load(os.path.join(path, action, filename))
                 data = scale(data)
                 data = move(data)
                 sequences.append(data)
