@@ -5,7 +5,7 @@ from utils import *
 model = load_model('../data/model.h5')
 actions = get_actions()
 
-threshold = 0.97
+threshold = 0.9
 
 last_change = datetime.now()
 sentence = []

@@ -29,6 +29,8 @@ def augmentation(path=DATA_PATH, amount: int = 10):
             move_dirs = random.choices(
                 ["left", "right", "up", "down", "left-up", "right-up", "left-down", "right-down"], k=amount)
             for index, d in enumerate(move_dirs):
+                if not os.path.exists(os.path.join(path, action, f"{seq}.npy")):
+                    continue
                 data = np.load(os.path.join(path, action, f"{seq}.npy"))
                 x_min, y_min, x_max, y_max = get_mins_and_maxs(data)
                 to_move = random.random()

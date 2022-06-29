@@ -14,14 +14,14 @@ TEST_SPLIT = 1 - TRAIN_SPLIT
 VAL_SPLIT = 0.25
 
 actions = get_actions()
-sequences, labels = augmentation()
+sequences, labels = augmentation(amount=0)
 
 added_sequences, added_labels = load_numpy(DATA_PATH)
 sequences += added_sequences
 labels += added_labels
 
 early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=50, mode="min", min_delta=0.001)
-tensorboard = tf.keras.callbacks.TensorBoard(log_dir='../data/', histogram_freq=0, write_graph=True, write_images=True)
+# tensorboard = tf.keras.callbacks.TensorBoard(log_dir='../data/', histogram_freq=0, write_graph=True, write_images=True)
 
 model = Sequential()
 model.add(LSTM(256, return_sequences=True, activation='selu', kernel_initializer='lecun_normal', input_shape=(20, 244)))
@@ -40,7 +40,7 @@ y = to_categorical(labels).astype(int)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=TEST_SPLIT)
 
 model.compile(optimizer=opt, loss="categorical_crossentropy", metrics=['accuracy'])
-model.fit(X_train, y_train, epochs=800, callbacks=[tensorboard, early_stopping],
+model.fit(X_train, y_train, epochs=800, callbacks=[early_stopping],
           verbose=1, validation_split=VAL_SPLIT)
 
 y_pred = model.predict(X_test)
@@ -56,7 +56,7 @@ print(f"Precision: {precision}")
 print(f"Recall:    {recall}")
 print(f"F1 score:  {f1_score}")
 
-date = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+date = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 model.save('../data/model.h5')
-model.save(f'../data/{date}.h5') # backup model
+model.save(f'../data/{date}.h5')
 
