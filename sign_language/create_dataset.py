@@ -54,6 +54,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.8, min_tracking_confidence=
 
                 cv2.waitKey(10)
 
+
             npy_path = os.path.join(DATA_PATH, action, str(sequence))
             np.save(npy_path, np.array(numpy_seq))
 
