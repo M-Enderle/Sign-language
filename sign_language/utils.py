@@ -163,3 +163,18 @@ def remove_unnec(to_rem: list):
                 s.append(frame)
             npy_path = os.path.join(DATA_PATH, action, str(seq))
             np.save(npy_path, np.array(s))
+
+
+def set_color(_fig, _ax):
+    _fig.patch.set_facecolor('#1b212c')
+    _ax.patch.set_facecolor('#1b212c')
+    _ax.spines['bottom'].set_color('white')
+    _ax.spines['top'].set_color('white')
+    _ax.spines['left'].set_color('white')
+    _ax.spines['right'].set_color('white')
+    _ax.xaxis.label.set_color('white')
+    _ax.yaxis.label.set_color('white')
+    _ax.grid(alpha=0.1)
+    _ax.title.set_color('white')
+    _ax.tick_params(axis='x', colors='white')
+    _ax.tick_params(axis='y', colors='white')

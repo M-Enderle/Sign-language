@@ -1,6 +1,6 @@
 from utils import *
 
-actions = np.array(['hello', 'world', 'from', 'germany', 'none'])
+actions = np.array(['none'])
 no_sequences = 300
 
 create_folders(actions, DATA_PATH)
@@ -17,13 +17,13 @@ with mp_holistic.Holistic(min_detection_confidence=0.8, min_tracking_confidence=
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 4, cv2.LINE_AA)
             cv2.imshow('OpenCV Feed', frame)
 
-        for sequence in range(no_sequences):
+        for sequence in range(320, 400):
 
             numpy_seq = []
             if sequence != 0 and sequence % 40 == 0:
                 while not cv2.waitKey(10) & 0xFF == ord('c'):
                     ret, frame = cap.read()
-                    cv2.putText(image, 'Take a break. press c to continue', (120, 200),
+                    cv2.putText(frame, 'Take a break. press c to continue', (120, 200),
                                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 4, cv2.LINE_AA)
                     cv2.imshow('OpenCV Feed', frame)
 
@@ -42,18 +42,18 @@ with mp_holistic.Holistic(min_detection_confidence=0.8, min_tracking_confidence=
                     cv2.putText(image, 'Collecting frames for {} Video Number {}'.format(action, sequence), (15, 12),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
                     cv2.imshow('OpenCV Feed', image)
-                    # cv2.waitKey(1000)
+                    cv2.waitKey(1000)
                 else:
                     cv2.putText(image, 'Collecting frames for {} Video Number {}'.format(action, sequence), (15, 12),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
                     cv2.imshow('OpenCV Feed', image)
 
-                if results.right_hand_landmarks or results.left_hand_landmarks:
+                if True or results.right_hand_landmarks or results.left_hand_landmarks:
                     key_points = create_numpy(results)
                     numpy_seq.append(key_points)
 
-                if cv2.waitKey(10) & 0xFF == ord('q'):
-                    print("There is no going back now")
+                cv2.waitKey(10)
+
 
             npy_path = os.path.join(DATA_PATH, action, str(sequence))
             np.save(npy_path, np.array(numpy_seq))

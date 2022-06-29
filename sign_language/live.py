@@ -5,7 +5,9 @@ from utils import *
 model = load_model('../data/model.h5')
 actions = get_actions()
 
-threshold = 0.97
+threshold = 0.98
+frame_counter = 0
+
 
 last_change = datetime.now()
 sentence = []
@@ -29,7 +31,14 @@ with mp_holistic.Holistic(min_detection_confidence=0.8, min_tracking_confidence=
         if len(sequence) == sequence_length:
             res = model.predict(np.expand_dims(sequence, axis=0), verbose=0)[0]
             if np.max(res) > threshold:
-                if actions[np.argmax(res)] == "none":
+                if sentence and actions[np.argmax(res)] == "hello":
+                    frame_counter += 1
+                    if frame_counter >= 10 and sentence and sentence[-1] != "hello":
+                        sentence.append("hello")
+                        last_change = datetime.now()
+                    elif frame_counter >= 10:
+                        frame_counter = 0
+                elif actions[np.argmax(res)] == "none":
                     pass
                 elif sentence and sentence[-1] != actions[np.argmax(res)]:
                     sentence.append(actions[np.argmax(res)])
