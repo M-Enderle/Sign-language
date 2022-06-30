@@ -77,12 +77,14 @@ def create_numpy(results):
 
 
 def visualize_probabilities(res, image, actions):
+    i = 0
     for num, prob in enumerate(res):
         if not actions[num] == 'none':
-            cv2.rectangle(image, (0, 60 + num * 20), (int(prob * 100), 80 + num * 20),
+            cv2.rectangle(image, (0, 60 + i * 20), (int(prob * 100), 80 + i * 20),
                           (0, prob * 150, (1 - prob) * 150), -1)
-            cv2.putText(image, actions[num], (5, 75 + num * 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1,
+            cv2.putText(image, actions[num], (5, 75 + i * 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1,
                         cv2.LINE_AA)
+            i += 1
 
 
 def label_map(path=DATA_PATH):
@@ -91,12 +93,13 @@ def label_map(path=DATA_PATH):
 
 def get_actions(path=DATA_PATH):
     actions = []
-    for file in os.listdir(path):
+    files = os.listdir(path)
+    files.sort()
+    for file in files:
         if os.path.isdir(os.path.join(path, file)):
             actions.append(file)
 
     return np.array(actions)
-
 
 def create_folders(actions, path=DATA_PATH):
     if not os.path.exists(path):
