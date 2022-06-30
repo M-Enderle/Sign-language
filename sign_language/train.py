@@ -13,7 +13,7 @@ TEST_SPLIT = 1 - TRAIN_SPLIT
 VAL_SPLIT = 0.25
 
 actions = get_actions()
-sequences, labels = apply(amount=5)
+sequences, labels = apply(amount=3)
 
 added_sequences, added_labels = load_numpy(DATA_PATH)
 sequences += added_sequences
@@ -37,9 +37,10 @@ X = np.array(sequences)
 y = to_categorical(labels).astype(int)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=TEST_SPLIT)
 
+
 model.compile(optimizer=opt, loss="categorical_crossentropy", metrics=['accuracy'])
 model.fit(X_train, y_train, epochs=800, callbacks=[early_stopping],
-          verbose=1, validation_split=VAL_SPLIT)
+          verbose=1, validation_split=VAL_SPLIT, batch_size=200)
 
 y_pred = model.predict(X_test)
 cm = confusion_matrix(np.argmax(y_test, axis=1), np.argmax(y_pred, axis=1))

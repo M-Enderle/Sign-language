@@ -91,12 +91,13 @@ def label_map(path=DATA_PATH):
 
 def get_actions(path=DATA_PATH):
     actions = []
-    for file in os.listdir(path):
+    files = os.listdir(path)
+    files.sort()
+    for file in files:
         if os.path.isdir(os.path.join(path, file)):
             actions.append(file)
 
     return np.array(actions)
-
 
 def create_folders(actions, path=DATA_PATH):
     if not os.path.exists(path):
